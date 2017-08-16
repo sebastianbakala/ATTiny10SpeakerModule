@@ -1,5 +1,7 @@
 /*************************************************
  * Public Constants
+ * File taken from mikeputnam's repository
+ * https://gist.github.com/mikeputnam/2820675
  *************************************************/
 
 #define NOTE_B0  31
