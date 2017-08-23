@@ -17,7 +17,7 @@
   void soundInit(void);
   void sound(int16_t);
   void noSound(void);
-  uint1_t Tempo(uint32_t, const char *, uint32_t);
+  uint8_t Tempo(uint32_t, const char *, uint32_t);
   void playSound(const char *);
 
 #endif

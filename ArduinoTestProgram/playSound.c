@@ -54,7 +54,7 @@ void noSound(void)
   sound(0);
 }
 
-uint1_t Tempo(uint32_t *externalIterator, const char *melody, uint32_t lenOfMelody)
+uint8_t Tempo(uint32_t *externalIterator, const char *melody, uint32_t lenOfMelody)
 {
   // extract specified tempo
   // !WARNING! tempo_max is 255
@@ -130,7 +130,7 @@ uint1_t Tempo(uint32_t *externalIterator, const char *melody, uint32_t lenOfMelo
 void playSound(const char *melody)
 {
   //in case the array was empty im not dividing by sizeof(melody[0])
-  uint32_t lenOfMelody = (uint32_t)(sizeof(melody) / sizeof(char)), i = 1;
+  uint32_t lenOfMelody = strlen(melody), i = 1;
   uint8_t tempo;
 
   if (lenOfMelody)
