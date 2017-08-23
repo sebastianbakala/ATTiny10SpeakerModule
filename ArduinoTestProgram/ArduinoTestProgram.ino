@@ -3,69 +3,25 @@
  *
  * Created: 31.07.2017 11:14:31
  * Author : Tomasz Jaworski
- */ 
+ */
 
-#define SOUND_CLOCK  2
-#define SOUND_DATA 3
+#include playSound.h
 
-void soundInit(void)
-{
-  pinMode(SOUND_DATA, OUTPUT);
-  pinMode(SOUND_CLOCK, OUTPUT);
 
-  digitalWrite(SOUND_CLOCK, 0);
-  digitalWrite(SOUND_DATA, 0);
-  delay(1);
 
-}
-
-#define C 261
-#define D 294
-#define E 330
-#define F 349
-#define G 392
-#define A 440
-#define H 494
-#define C2 523
-
-int16_t s1[] = 
+int16_t s1[] =
 {
   C, 2, D, 2, E, 2, F, 2,
   G, 1, E, 1,
-  G, 1, E, 1, 
+  G, 1, E, 1,
   E, 2, E, 2, D, 2, D, 2,
   C, 1,
   0, 0,
 };
 
-void sound(int16_t freq)
-{
-  // przelicz wartosc
-  /*
-   *  1   1 8MHz 1
-   * ---- - ---- -
-   * freq 2  8   2
-   */
 
-  uint16_t value = 250000L / freq;
-  
 
-  for (int i = 0; i < 16; i++)
-  {
-    digitalWrite(SOUND_DATA, value & 0x8000);
-    value <<= 1;
 
-    // pulse the data
-    digitalWrite(SOUND_CLOCK, 1);
-    delayMicroseconds(100);
-    digitalWrite(SOUND_CLOCK, 0);
-  }
-}
-
-void noSound(void)
-{
-  sound(0);
-}
 
 
 void setup() {
@@ -78,210 +34,210 @@ void setup() {
 void loop()
 {
   // taken from http://www.elektroda.pl/rtvforum/topic1812254.html
-  
-  sound (440); 
+
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (294); 
+  sound (294);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  sound (294); 
+  sound (294);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (494); 
+  sound (494);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (294); 
+  sound (294);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (494); 
+  sound (494);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
   //druga zwrotka
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (294); 
+  sound (294);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  sound (294); 
+  sound (294);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (494); 
+  sound (494);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (294); 
+  sound (294);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (349); 
+  sound (349);
   delay (150);
-  sound (494); 
+  sound (494);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  
+
   //{refren}
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  
-  sound (440); 
+
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (330); 
+  sound (330);
   delay (150);
-  
-  sound (440); 
+
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  
-  sound (440); 
+
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (392); 
+  sound (392);
   delay (150);
-  sound (262); 
+  sound (262);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  sound (440); 
+  sound (440);
   delay (150);
-  
+
 
 }
 
@@ -299,7 +255,5 @@ void loop1() {
   noSound();
 
   delay(4000);
-  
-}
-  
 
+}
