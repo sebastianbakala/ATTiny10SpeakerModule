@@ -51,7 +51,7 @@ void sound(int32_t freq, uint8_t tempo)
 
 void noSound(void)
 {
-	sound(0);
+	sound(0); //popraw
 }
 
 void playSound(const char *melody)
