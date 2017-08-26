@@ -16,7 +16,7 @@
 
   void soundInit(void);
   void sound(int16_t, uint8_t);
-  void noSound(uint8_t);
+  void noSound(void);
   void playSound(const char *);
 
 #endif
