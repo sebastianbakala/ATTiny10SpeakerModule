@@ -15,7 +15,7 @@
   #define a 1.059463094359 //2^(1/12)
 
   void soundInit(void);
-  void sound(int16_t, uint8_t);
+  void sound(int32_t, uint8_t);
   void noSound(void);
   void playSound(const char *);
 
