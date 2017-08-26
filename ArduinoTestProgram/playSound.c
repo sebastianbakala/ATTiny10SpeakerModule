@@ -104,7 +104,6 @@ void playSound(const char *melody)
 			uint8_t tableOfNotes_index = 0; //A
 			uint8_t note = 65;	//A in ASCII
 			int8_t defaultOctave = -4;
-			int8_t octave;
 			uint8_t n;
 			//uint1_t octave; //it will be an multiplier for our equation
 
@@ -121,8 +120,7 @@ void playSound(const char *melody)
 						}
 						else if (isdigit(melody[i + 1]))
 						{
-							octave = melody[i + 1];
-							playSound((f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo);
+							playSound((f0 * pow(a, n + 12 * (defaultOctave + melody[i + 1])), tempo);
 						}
 						else
 						{
