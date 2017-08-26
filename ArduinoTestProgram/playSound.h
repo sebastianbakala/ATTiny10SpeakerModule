@@ -11,13 +11,12 @@
 
   #define SOUND_CLOCK 2
   #define SOUND_DATA 3
-  #define A4 440 //Hz
+  #define f0 440 //Hz
   #define a 1.059463094359 //2^(1/12)
 
   void soundInit(void);
-  void sound(int16_t);
-  void noSound(void);
-  uint8_t Tempo(uint32_t, const char *, uint32_t);
+  void sound(int16_t, uint8_t);
+  void noSound(uint8_t);
   void playSound(const char *);
 
 #endif
