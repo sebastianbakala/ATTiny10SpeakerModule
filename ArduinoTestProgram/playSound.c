@@ -21,7 +21,7 @@ void soundInit(void)
 	delay(1);
 }
 
-void sound(int16_t freq, uint8_t tempo)
+void sound(int32_t freq, uint8_t tempo)
 {
 	// przelicz wartosc
 	/*
@@ -31,7 +31,7 @@ void sound(int16_t freq, uint8_t tempo)
 	*/
 
 	//for not dividing by '0'
-	uint16_t value = 0;
+	uint32_t value = 0;
 	if (freq)
 	{
 		value = 250000L / freq;
@@ -44,7 +44,7 @@ void sound(int16_t freq, uint8_t tempo)
 
 		// pulse the data
 		digitalWrite(SOUND_CLOCK, 1);
-		delayMicroseconds(tempo);
+		delayMicroseconds(tempo*1000000);
 		digitalWrite(SOUND_CLOCK, 0);
 	}
 }
@@ -66,7 +66,7 @@ void playSound(const char *melody)
 			while (isdigit(melody))
 			{
 				tempo *= 10;
-				tempo += melody++ - 48;
+				tempo += /*popraw*/melody++ - 48;
 
 				if (tempo > 255)
 				{
@@ -119,7 +119,7 @@ void playSound(const char *melody)
 						}
 						else if (isdigit(melody[i + 1]))
 						{
-							playSound((f0 * pow(a, n + 12 * (defaultOctave + melody[i + 1])), tempo);
+							sound((f0 * pow(a, n + 12 * (defaultOctave + melody[i + 1]/*popraw*/)), tempo);
 						}
 						else
 						{
