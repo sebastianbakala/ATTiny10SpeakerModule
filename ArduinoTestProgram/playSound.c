@@ -49,10 +49,9 @@ void sound(int16_t freq, uint8_t tempo)
 	}
 }
 
-void noSound(uint8_t tempo)
+void noSound(void)
 {
 	sound(0);
-	delayMicroseconds(tempo)
 }
 
 void playSound(const char *melody)
@@ -149,10 +148,8 @@ void playSound(const char *melody)
 			}
 			else if (melody[i] == 48) //0 -> mean pause
 			{
-				noSound(0, tempo);
+				sound(0, tempo);
 			}
-
-			delay(tempo);
 		}
 	}
 }
