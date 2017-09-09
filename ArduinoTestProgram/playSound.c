@@ -90,7 +90,7 @@ void playSound(const char *melody)
 			if (tempo > 255)
 			{
 				tempo = 255;
-				if (*(melody + 1) != '\0')
+				if (*(melody + 1))
 					++melody;
 				else
 					return;	//error
