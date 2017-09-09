@@ -159,13 +159,3 @@ void playSound(const char *melody)
 			return;	// bad input sequence
 	}
 }
-
-int main(void)
-{
-	char t[] = "t170e8f8g8g8f8e8d8c8c8d8e8d8c8c4";
-	playSound(t);
-
-	getchar();
-
-	return 0;
-}
