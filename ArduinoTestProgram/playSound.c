@@ -119,7 +119,7 @@ void playSound(const char *melody)
 			{
 				n = tableOfNotes[tableOfNotes_index];
 				loop:
-				if (*(melody + 1) != '\0')
+				if (*(melody + 1))
 				{
 					if (*(melody + 1) == 83 || *(melody + 1) == 115)	//S or s means fis '#'
 					{
