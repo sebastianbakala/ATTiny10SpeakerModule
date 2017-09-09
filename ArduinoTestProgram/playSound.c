@@ -2,13 +2,19 @@
 *
 * Created: 31.07.2017 11:14:31
 * Author : Tomasz Jaworski
-* Modified: 20.08.2017 16:36:18
+* Modified: 09.09.2017 21:14:38
 * Author: Sebastian Bąkała
 *
 * ATTiny Sound Generator v0.8
 */
 
-#include <playSound.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+#include "playSound.h"
 
 
 void soundInit(void)
@@ -21,7 +27,7 @@ void soundInit(void)
 	delay(1);
 }
 
-void sound(int32_t freq, uint8_t tempo)
+void sound(uint16_t freq, uint8_t tempo)
 {
 	// przelicz wartosc
 	/*
@@ -31,7 +37,7 @@ void sound(int32_t freq, uint8_t tempo)
 	*/
 
 	//for not dividing by '0'
-	uint32_t value = 0;
+	uint16_t value = 0;
 	if (freq)
 	{
 		value = 250000L / freq;
@@ -44,112 +50,122 @@ void sound(int32_t freq, uint8_t tempo)
 
 		// pulse the data
 		digitalWrite(SOUND_CLOCK, 1);
-		delayMicroseconds(tempo*1000000);
+		delayMicroseconds(tempo);
 		digitalWrite(SOUND_CLOCK, 0);
 	}
 }
 
-void noSound(void)
+void noSound(uint8_t tempo)
 {
-	sound(0); //popraw
+	sound(0, tempo);
 }
 
 void playSound(const char *melody)
 {
-	uint32_t lenOfMelody = strlen(melody), i = 1;
-	uint8_t tempo = 0;
+	uint32_t lenOfMelody = (uint32_t)strlen(melody);
+	uint16_t tempo = 0;
 
-	if (lenOfMelody)
+	while(*melody)
 	{
-		if (melody[0] == 'T' || melody[0] == 't')	//read tempo
-		{
-			while (isdigit(melody))
-			{
-				tempo *= 10;
-				tempo += /*popraw*/melody++ - 48;
 
-				if (tempo > 255)
-				{
-					tempo = 255;
-					if (i + 1 < lenOfMelody)
-						++melody;
-					else
-						return;	//error
-					break;
-				}
-
-				++i;
-			}
-			if (tempo < 32)
-			{
-				if (tempo == 0)
-					tempo = 150;
-				else
-					tempo = 32;
-			}
+		while (*melody == 'T' || *melody == 't') 
+		{ 
+			if (isdigit(*(++melody)))
+				tempo = 0;
 		}
 
-		for (; i < lenOfMelody; ++i)
+		while (isdigit(*melody))
 		{
-			// basic frequency is f0 = A4 = 440Hz
-			// a = 1.059463094359
-			// formula for frequency of specific note is given by following equation:
-			// fn = f0 * (a)^n, where n is a distance from A4 to note given by user
+			tempo *= 10;
+			tempo += (uint16_t)*melody - 48;
 
-			// list of notes C, C#, D, D#, E, F, F#, G, G#, A, A#, B, <- 12 elements
-			// every octave starts from C
-			//uint1_t notes[12] = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2}; //
-			const int8_t tableOfNotes[] = { 0, 2, -9, -7, -5, -4, -2 };
-			uint8_t tableOfNotes_index = 0; //A
-			uint8_t note = 65;	//A in ASCII
-			int8_t defaultOctave = -4;
-			uint8_t n;
-			//uint1_t octave; //it will be an multiplier for our equation
-
-			if (melody[i] >= 65 && melody[i] <= 71 || melody[i] >= 97 && melody[i] <= 103)
+			if (tempo > 255)
 			{
-				if (melody[i] == note || melody[i] == note + 32) // big or small letter representing a note
-				{
-					if (i + 1 <= lenOfMelody)
-					{
-						n = tableOfNOtes[tableOfNotes_index];
-						if (melody[i + 1] == 83 || melody[i + 1] == 115)	// means fis '#' (S or s)
-						{
-							++n;
-						}
-						else if (isdigit(melody[i + 1]))
-						{
-							sound((f0 * pow(a, n + 12 * (defaultOctave + melody[i + 1]/*popraw*/)), tempo);
-						}
-						else
-						{
-							return;
-						}
-						++melody;
-					}
-					else
-					{
-						return;
-					}
-				}
-
-				if (i + 1 <= lenOfMelody)
-				{
+				tempo = 255;
+				if (*(melody + 1) != '\0')
 					++melody;
+				else
+					return;	//error
+				break;
+			}
+			++melody;
+		}
+
+		if (tempo < 32)
+		{
+			if (tempo == 0)
+				tempo = 150;
+			else
+				tempo = 32;
+		}
+
+		const int8_t tableOfNotes[] = { 0, 2, -9, -7, -5, -4, -2 };
+		static uint8_t tableOfNotes_index = 0;	//A
+		static uint8_t note = 65;	//A in ASCII
+		int8_t defaultOctave = -4, n;
+		uint8_t octave = 0;
+
+		if (*melody >= 65 && *melody <= 71 || *melody >= 97 && *melody <= 103 || *melody == 83 || *melody == 115)
+		{
+			if (*melody == note || *melody == note + 32)
+			{
+				n = tableOfNotes[tableOfNotes_index];
+				loop:
+				if (*(melody + 1) != '\0')
+				{
+					if (*(melody + 1) == 83 || *(melody + 1) == 115)	//S or s means fis '#'
+					{
+						// TODO
+						// only A, C, D, F, G notes has # (fis)
+						while (*(melody + 1) == 83 || *(melody + 1) == 115) ++melody;
+						++n;
+						goto loop;
+					}
+					else if (isdigit(*(melody + 1)))
+					{
+						while (isdigit(*(++melody)) && *melody)
+						{
+							octave *= 10;
+							octave += (uint16_t)*melody - 48;
+							if (octave > 8)
+								return; //max octave is 8
+						}
+						//printf("freq = %lu \n", (uint32_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))));
+						sound((uint16_t)f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo);
+					}
+					else
+						return;	//bad input sequence
 				}
 				else
-				{
 					return;
-				}
-
-				++tableOfNotes_index;
-				++note;
-
 			}
-			else if (melody[i] == 48) //0 -> mean pause
+
+			++note;
+			if (++tableOfNotes_index > 6)
 			{
-				sound(0, tempo);
+				tableOfNotes_index = 0;
+				note = 65;
 			}
 		}
+
+		else if (*melody == 80 || *melody == 112) //P or p (means pause)
+		{
+			playSound(0, tempo);
+			if (*(melody + 1) == '\0')
+				return;
+			++melody;
+		}
+		else
+			return;	// bad input sequence
 	}
+}
+
+int main(void)
+{
+	char t[] = "t170e8f8g8g8f8e8d8c8c8d8e8d8c8c4";
+	playSound(t);
+
+	getchar();
+
+	return 0;
 }
