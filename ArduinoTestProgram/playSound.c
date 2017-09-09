@@ -6,6 +6,14 @@
 * Author: Sebastian Bąkała
 *
 * ATTiny Sound Generator v0.8
+*
+* example of use:
+*  playSound("T200c1c2c3c3cs3T170C2")
+*  OR
+*  char t[] = "T200c1c2c3c3cs3T170C2";
+*  playSound(t);
+*
+* for change tuning, change f0 in playSound.h
 */
 
 #include <stdio.h>
