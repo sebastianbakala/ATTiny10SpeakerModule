@@ -73,97 +73,101 @@ void playSound(const char *melody)
 	uint32_t lenOfMelody = (uint32_t)strlen(melody);
 	uint16_t tempo = 0;
 
-	while(*melody)
+	if (lenOfMelody)
 	{
-
-		while (*melody == 'T' || *melody == 't') 
-		{ 
-			if (isdigit(*(++melody)))
-				tempo = 0;
-		}
-
-		while (isdigit(*melody))
+		while (*melody)
 		{
-			tempo *= 10;
-			tempo += (uint16_t)*melody - 48;
 
-			if (tempo > 255)
+			while (*melody == 'T' || *melody == 't')
 			{
-				tempo = 255;
-				if (*(melody + 1))
-					++melody;
-				else
-					return;	//error
-				break;
+				if (isdigit(*(++melody)))
+					tempo = 0;
 			}
-			++melody;
-		}
 
-		if (tempo < 32)
-		{
-			if (tempo == 0)
-				tempo = 150;
-			else
-				tempo = 32;
-		}
-
-		const int8_t tableOfNotes[] = { 0, 2, -9, -7, -5, -4, -2 };
-		static uint8_t tableOfNotes_index = 0;	//A
-		static uint8_t note = 65;	//A in ASCII
-		int8_t defaultOctave = -4, n;
-		uint8_t octave = 0;
-
-		if (*melody >= 65 && *melody <= 71 || *melody >= 97 && *melody <= 103 || *melody == 83 || *melody == 115)
-		{
-			if (*melody == note || *melody == note + 32)
+			while (isdigit(*melody))
 			{
-				n = tableOfNotes[tableOfNotes_index];
-				loop:
-				if (*(melody + 1))
+				tempo *= 10;
+				tempo += (uint16_t)*melody - 48;
+
+				if (tempo > 255)
 				{
-					if (*(melody + 1) == 83 || *(melody + 1) == 115)	//S or s means fis '#'
+					tempo = 255;
+					if (*(melody + 1) != '\0')
+						++melody;
+					else
+						return;	//error
+					break;
+				}
+				++melody;
+			}
+
+			if (tempo < 32)
+			{
+				if (tempo == 0)
+					tempo = 150;
+				else
+					tempo = 32;
+			}
+
+			const int8_t tableOfNotes[] = { 0, 2, -9, -7, -5, -4, -2 };
+			static uint8_t tableOfNotes_index = 0;	//A
+			static uint8_t note = 65;	//A in ASCII
+			int8_t defaultOctave = -4, n;
+			uint8_t octave = 0;
+
+			if (*melody >= 65 && *melody <= 71 || *melody >= 97 && *melody <= 103 || *melody == 83 || *melody == 115)
+			{
+				if (*melody == note || *melody == note + 32)
+				{
+					n = tableOfNotes[tableOfNotes_index];
+				loop:
+					if (*(melody + 1) != '\0')
 					{
-						// TODO
-						// only A, C, D, F, G notes has # (fis)
-						while (*(melody + 1) == 83 || *(melody + 1) == 115) ++melody;
-						++n;
-						goto loop;
-					}
-					else if (isdigit(*(melody + 1)))
-					{
-						while (isdigit(*(++melody)) && *melody)
+						if (*(melody + 1) == 83 || *(melody + 1) == 115)	//S or s means fis '#'
 						{
-							octave *= 10;
-							octave += (uint16_t)*melody - 48;
-							if (octave > 8)
-								return; //max octave is 8
+							// TODO
+							// only A, C, D, F, G notes has # (fis)
+							while (*(melody + 1) == 83 || *(melody + 1) == 115) ++melody;
+							++n;
+							goto loop;
 						}
-						//printf("freq = %lu \n", (uint32_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))));
-						sound((uint16_t)f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo);
+						else if (isdigit(*(melody + 1)))
+						{
+							while (isdigit(*(++melody)) && *melody)
+							{
+								octave *= 10;
+								octave += (uint16_t)*melody - 48;
+								if (octave > 8)
+									return; //max octave is 8
+							}
+							printf("freq = %lu \n", (uint32_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))));
+							//sound((uint16_t)f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo * 1000000);
+						}
+						else
+							return;	//bad input sequence
 					}
 					else
-						return;	//bad input sequence
+						return;
 				}
-				else
-					return;
+
+				++note;
+				if (++tableOfNotes_index > 6)
+				{
+					tableOfNotes_index = 0;
+					note = 65;
+				}
 			}
 
-			++note;
-			if (++tableOfNotes_index > 6)
+			else if (*melody == 80 || *melody == 112) //P or p (means pause)
 			{
-				tableOfNotes_index = 0;
-				note = 65;
+				//playSound(0, tempo * 1000000);
+				if (*(melody + 1) == '\0')
+					return;
+				++melody;
 			}
+			else
+				return;	// bad input sequence
 		}
-
-		else if (*melody == 80 || *melody == 112) //P or p (means pause)
-		{
-			playSound(0, tempo);
-			if (*(melody + 1) == '\0')
-				return;
-			++melody;
-		}
-		else
-			return;	// bad input sequence
 	}
 }
+
