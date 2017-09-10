@@ -116,9 +116,8 @@ void playSound(const char *melody)
 				loop:
 					if (*(melody + 1))
 					{
-						if (*(melody + 1) == 83 || *(melody + 1) == 115)	//S or s means fis '#'
+						if ((*(melody + 1) == 83 || *(melody + 1) == 115) && (*melody == 65 || *melody == 97 || *melody == 67 || *melody == 99 || *melody == 68 || *melody == 100 || *melody == 70 || *melody == 102 || *melody == 71 || *melody == 103)	//S or s means fis '#'
 						{
-							// TODO
 							// only A, C, D, F, G notes has # (fis)
 							while (*(melody + 1) == 83 || *(melody + 1) == 115) ++melody;
 							++n;
