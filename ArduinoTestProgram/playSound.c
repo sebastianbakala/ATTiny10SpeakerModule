@@ -6,16 +6,9 @@
 * Author: Sebastian Bąkała
 *
 * ATTiny Sound Generator v0.8
-*
-* example of use:
-*  playSound("T200c1c2c3c3cs3T170C2")
-*  OR
-*  char t[] = "T200c1c2c3c3cs3T170C2";
-*  playSound(t);
-*
-* for change tuning, change f0 in playSound.h
 */
 
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -44,8 +37,7 @@ void sound(uint16_t freq, uint8_t tempo)
 	* freq 2  8   2
 	*/
 
-	//for not dividing by '0'
-	uint16_t value = 0;
+	uint32_t value = 0;
 	if (freq)
 	{
 		value = 250000L / freq;
@@ -58,14 +50,14 @@ void sound(uint16_t freq, uint8_t tempo)
 
 		// pulse the data
 		digitalWrite(SOUND_CLOCK, 1);
-		delayMicroseconds(tempo);
+		delayMicroseconds(tempo * 1000000);
 		digitalWrite(SOUND_CLOCK, 0);
 	}
 }
 
 void noSound(uint8_t tempo)
 {
-	sound(0, tempo);
+	sound(0, tempo * 1000000);
 }
 
 void playSound(const char *melody)
@@ -78,10 +70,11 @@ void playSound(const char *melody)
 		while (*melody)
 		{
 
-			while (*melody == 'T' || *melody == 't')
+			while (*melody == 84 || *melody == 116)
 			{
-				if (isdigit(*(++melody)))
+				if (isdigit(*(melody+1)))
 					tempo = 0;
+				++melody;
 			}
 
 			while (isdigit(*melody))
@@ -92,7 +85,7 @@ void playSound(const char *melody)
 				if (tempo > 255)
 				{
 					tempo = 255;
-					if (*(melody + 1) != '\0')
+					if (*(melody + 1))
 						++melody;
 					else
 						return;	//error
@@ -121,7 +114,7 @@ void playSound(const char *melody)
 				{
 					n = tableOfNotes[tableOfNotes_index];
 				loop:
-					if (*(melody + 1) != '\0')
+					if (*(melody + 1))
 					{
 						if (*(melody + 1) == 83 || *(melody + 1) == 115)	//S or s means fis '#'
 						{
@@ -140,7 +133,7 @@ void playSound(const char *melody)
 								if (octave > 8)
 									return; //max octave is 8
 							}
-							sound((uint16_t)f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo * 1000000);
+							sound((uint16_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))), (uint32_t)tempo * 1000000);
 						}
 						else
 							return;	//bad input sequence
@@ -159,14 +152,16 @@ void playSound(const char *melody)
 
 			else if (*melody == 80 || *melody == 112) //P or p (means pause)
 			{
-				playSound(0, tempo * 1000000);
-				if (*(melody + 1) == '\0')
+				//sound(0, tempo * 1000000);
+				if (!(*(++melody)))
 					return;
-				++melody;
+			}
+			else if (*melody == 84 || *melody == 116)
+			{
+				tempo -= 0;	//nothing for 'sssssssssSSSSSsssSSSSss' <- e.g. sequence
 			}
 			else
 				return;	// bad input sequence
 		}
 	}
 }
-
