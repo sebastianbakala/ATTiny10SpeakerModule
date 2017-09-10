@@ -68,7 +68,7 @@ void playSound(const char *melody)
 		return;
 	
 	uint8_t tableOfNotes_index = 0;	//A
-	uint8_t note = A;	//A in ASCII
+	uint8_t note = 'A';	//A in ASCII
 	
 	while (*melody)
 	{
@@ -117,7 +117,7 @@ void playSound(const char *melody)
 			loop:
 				if (*(melody + 1))
 				{
-					if ((*(melody + 1) == 'S' || *(melody + 1) == 's') && (*melody == 'A' || *melody == 'a' || *melody == 'C' || *melody == 'c' || *melody == 'D' || *melody == 'd' || *melody == 'F' || *melody == 'f' || *melody == 'G' || *melody == 'g')	//S or s means fis '#'
+					if ((*(melody + 1) == 'S' || *(melody + 1) == 's') && (*melody == 'A' || *melody == 'a' || *melody == 'C' || *melody == 'c' || *melody == 'D' || *melody == 'd' || *melody == 'F' || *melody == 'f' || *melody == 'G' || *melody == 'g'))	//S or s means fis '#'
 					{
 						// only A, C, D, F, G notes has # (fis)
 						while (*(melody + 1) == 'S' || *(melody + 1) == 's') ++melody;
