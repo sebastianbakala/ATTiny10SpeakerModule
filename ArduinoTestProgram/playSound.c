@@ -62,20 +62,19 @@ void noSound(uint8_t tempo)
 void playSound(const char *melody)
 {
 	uint32_t lenOfMelody = (uint32_t)strlen(melody);
-	uint16_t tempo = 0;
-
 	if (lenOfMelody == 0)
 		return;
-	
+
+	uint16_t tempo = 0;
 	uint8_t tableOfNotes_index = 0;	//A
 	uint8_t note = 'A';	//A in ASCII
-	
+
 	while (*melody)
 	{
 
 		while (*melody == 'T' || *melody == 't')
 		{
-			if (isdigit(*(melody+1)))
+			if (isdigit(*(melody + 1)))
 				tempo = 0;
 			++melody;
 		}
