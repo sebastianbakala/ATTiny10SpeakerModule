@@ -70,7 +70,7 @@ void playSound(const char *melody)
 	while (*melody)
 	{
 
-		while (*melody == 'T' || *melody == 'T')
+		while (*melody == 'T' || *melody == 't')
 		{
 			if (isdigit(*(melody+1)))
 				tempo = 0;
