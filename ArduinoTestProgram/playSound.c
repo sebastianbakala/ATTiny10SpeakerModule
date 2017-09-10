@@ -8,7 +8,6 @@
 * ATTiny Sound Generator v0.8
 */
 
-#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -57,7 +56,7 @@ void sound(uint16_t freq, uint8_t tempo)
 
 void noSound(uint8_t tempo)
 {
-	sound(0, tempo * 1000000);
+	sound(0, tempo);
 }
 
 void playSound(const char *melody)
