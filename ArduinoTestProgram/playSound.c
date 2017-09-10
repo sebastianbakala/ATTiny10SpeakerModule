@@ -151,7 +151,7 @@ void playSound(const char *melody)
 
 			else if (*melody == 80 || *melody == 112) //P or p (means pause)
 			{
-				//sound(0, tempo * 1000000);
+				sound(0, tempo * 1000000);
 				if (!(*(++melody)))
 					return;
 			}
