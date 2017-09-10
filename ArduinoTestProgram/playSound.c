@@ -61,8 +61,7 @@ void noSound(uint8_t tempo)
 
 void playSound(const char *melody)
 {
-	uint32_t lenOfMelody = (uint32_t)strlen(melody);
-	if (lenOfMelody == 0)
+	if (!strlen(melody))
 		return;
 
 	uint16_t tempo = 0;
