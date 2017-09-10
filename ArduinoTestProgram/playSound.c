@@ -140,8 +140,7 @@ void playSound(const char *melody)
 								if (octave > 8)
 									return; //max octave is 8
 							}
-							printf("freq = %lu \n", (uint32_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))));
-							//sound((uint16_t)f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo * 1000000);
+							sound((uint16_t)f0 * pow(a, n + 12 * (defaultOctave + octave)), tempo * 1000000);
 						}
 						else
 							return;	//bad input sequence
@@ -160,7 +159,7 @@ void playSound(const char *melody)
 
 			else if (*melody == 80 || *melody == 112) //P or p (means pause)
 			{
-				//playSound(0, tempo * 1000000);
+				playSound(0, tempo * 1000000);
 				if (*(melody + 1) == '\0')
 					return;
 				++melody;
