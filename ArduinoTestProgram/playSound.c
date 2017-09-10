@@ -67,6 +67,10 @@ void playSound(const char *melody)
 
 	if (lenOfMelody == 0)
 		return;
+	
+	uint8_t tableOfNotes_index = 0;	//A
+	uint8_t note = A;	//A in ASCII
+	
 	while (*melody)
 	{
 
@@ -103,8 +107,6 @@ void playSound(const char *melody)
 		}
 
 		const int8_t tableOfNotes[] = { 0, 2, -9, -7, -5, -4, -2 };
-		static uint8_t tableOfNotes_index = 0;	//A
-		static uint8_t note = A;	//A in ASCII
 		int8_t defaultOctave = -4, n;
 		uint8_t octave = 0;
 
