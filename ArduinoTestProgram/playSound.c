@@ -70,7 +70,7 @@ void playSound(const char *melody)
 	while (*melody)
 	{
 
-		while (*melody == 84 || *melody == 116)
+		while (*melody == 'T' || *melody == 'T')
 		{
 			if (isdigit(*(melody+1)))
 				tempo = 0;
@@ -108,7 +108,7 @@ void playSound(const char *melody)
 		int8_t defaultOctave = -4, n;
 		uint8_t octave = 0;
 
-		if (*melody >= 65 && *melody <= 71 || *melody >= 97 && *melody <= 103 || *melody == 83 || *melody == 115)
+		if (*melody >= 'A' && *melody <= 'G' || *melody >= 'a' && *melody <= 'g' || *melody == 'S' || *melody == 's')
 		{
 			if (*melody == note || *melody == note + 32)
 			{
@@ -116,10 +116,10 @@ void playSound(const char *melody)
 			loop:
 				if (*(melody + 1))
 				{
-					if ((*(melody + 1) == 83 || *(melody + 1) == 115) && (*melody == 65 || *melody == 97 || *melody == 67 || *melody == 99 || *melody == 68 || *melody == 100 || *melody == 70 || *melody == 102 || *melody == 71 || *melody == 103)	//S or s means fis '#'
+					if ((*(melody + 1) == 'S' || *(melody + 1) == 's') && (*melody == 'A' || *melody == 'a' || *melody == 'C' || *melody == 'c' || *melody == 'D' || *melody == 'd' || *melody == 'F' || *melody == 'f' || *melody == 'G' || *melody == 'g')	//S or s means fis '#'
 					{
 						// only A, C, D, F, G notes has # (fis)
-						while (*(melody + 1) == 83 || *(melody + 1) == 115) ++melody;
+						while (*(melody + 1) == 'S' || *(melody + 1) == 's') ++melody;
 						++n;
 						goto loop;
 					}
@@ -149,13 +149,13 @@ void playSound(const char *melody)
 			}
 		}
 
-		else if (*melody == 80 || *melody == 112) //P or p (means pause)
+		else if (*melody == 'P' || *melody == 'p') //P or p (means pause)
 		{
 			sound(0, tempo * 1000000);
 			if (!(*(++melody)))
 				return;
 		}
-		else if (*melody == 84 || *melody == 116)
+		else if (*melody == 'T' || *melody == 't')
 		{
 			tempo -= 0;	//nothing for 'sssssssssSSSSSsssSSSSss' <- e.g. sequence
 		}
