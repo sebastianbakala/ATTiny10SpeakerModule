@@ -8,6 +8,7 @@
 * ATTiny Sound Generator v0.8
 */
 
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -17,47 +18,47 @@
 #include "playSound.h"
 
 
-void soundInit(void)
-{
-	pinMode(SOUND_DATA, OUTPUT);
-	pinMode(SOUND_CLOCK, OUTPUT);
-
-	digitalWrite(SOUND_CLOCK, 0);
-	digitalWrite(SOUND_DATA, 0);
-	delay(1);
-}
-
-void sound(uint16_t freq, uint8_t tempo)
-{
-	// przelicz wartosc
-	/*
-	*  1   1 8MHz 1
-	* ---- - ---- -
-	* freq 2  8   2
-	*/
-
-	uint32_t value = 0;
-	if (freq)
-	{
-		value = 250000L / freq;
-	}
-
-	for (int i = 0; i < 16; i++)
-	{
-		digitalWrite(SOUND_DATA, value & 0x8000);
-		value <<= 1;
-
-		// pulse the data
-		digitalWrite(SOUND_CLOCK, 1);
-		delayMicroseconds(tempo * 1000000);
-		digitalWrite(SOUND_CLOCK, 0);
-	}
-}
-
-void noSound(uint8_t tempo)
-{
-	sound(0, tempo);
-}
+//void soundInit(void)
+//{
+//	pinMode(SOUND_DATA, OUTPUT);
+//	pinMode(SOUND_CLOCK, OUTPUT);
+//
+//	digitalWrite(SOUND_CLOCK, 0);
+//	digitalWrite(SOUND_DATA, 0);
+//	delay(1);
+//}
+//
+//void sound(uint16_t freq)
+//{
+//	// przelicz wartosc
+//	/*
+//	*  1   1 8MHz 1
+//	* ---- - ---- -
+//	* freq 2  8   2
+//	*/
+//
+//	uint32_t value = 0;
+//	if (freq)
+//	{
+//		value = 250000L / freq;
+//	}
+//
+//	for (int i = 0; i < 16; i++)
+//	{
+//		digitalWrite(SOUND_DATA, value & 0x8000);
+//		value <<= 1;
+//
+//		// pulse the data
+//		digitalWrite(SOUND_CLOCK, 1);
+//		delayMicroseconds(100);
+//		digitalWrite(SOUND_CLOCK, 0);
+//	}
+//}
+//
+//void noSound()
+//{
+//	sound(0);
+//}
 
 void playSound(const char *melody)
 {
@@ -107,18 +108,18 @@ void playSound(const char *melody)
 		int8_t defaultOctave = -4, n;
 		uint8_t octave = 0;
 
-		if (*melody >= 'A' && *melody <= 'G' || *melody >= 'a' && *melody <= 'g' || *melody == 'S' || *melody == 's')
+		if (UPPER(*melody) >= 'A' && UPPER(*melody) <= 'G' || UPPER(*melody) == 'S')
 		{
-			if (*melody == note || *melody == note + 32)
+			if (UPPER(*melody) == note)
 			{
 				n = tableOfNotes[tableOfNotes_index];
 			loop:
 				if (*(melody + 1))
 				{
-					if ((*(melody + 1) == 'S' || *(melody + 1) == 's') && (*melody == 'A' || *melody == 'a' || *melody == 'C' || *melody == 'c' || *melody == 'D' || *melody == 'd' || *melody == 'F' || *melody == 'f' || *melody == 'G' || *melody == 'g'))	//S or s means fis '#'
+					if ((UPPER(*(melody + 1)) == 'S') && (UPPER(*melody) == 'A' || UPPER(*melody) == 'C' || UPPER(*melody) == 'D' || UPPER(*melody) == 'F' || UPPER(*melody) == 'G'))	//S or s means fis '#'
 					{
 						// only A, C, D, F, G notes has # (fis)
-						while (*(melody + 1) == 'S' || *(melody + 1) == 's') ++melody;
+						while (UPPER(*(melody + 1)) == 'S') ++melody;
 						++n;
 						goto loop;
 					}
@@ -131,7 +132,10 @@ void playSound(const char *melody)
 							if (octave > 8)
 								return; //max octave is 8
 						}
-						sound((uint16_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))), (uint32_t)tempo * 1000000);
+						//sound((uint16_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))));
+						printf("tempo = %d\n", tempo);
+						printf("freq = %u\n", (uint16_t)round(f0 * pow(a, n + 12 * (defaultOctave + octave))));
+						//delay(round(60000 / tempo));
 					}
 					else
 						return;	//bad input sequence
@@ -148,17 +152,27 @@ void playSound(const char *melody)
 			}
 		}
 
-		else if (*melody == 'P' || *melody == 'p') //P or p (means pause)
+		else if (UPPER(*melody) == 'P') //P or p (means pause)
 		{
-			sound(0, tempo * 1000000);
+			//sound(0);
+			//delay(round(60000 / tempo));
 			if (!(*(++melody)))
 				return;
 		}
-		else if (*melody == 'T' || *melody == 't')
+		else if (UPPER(*melody) == 'T')
 		{
 			tempo -= 0;	//nothing for 'sssssssssSSSSSsssSSSSss' <- e.g. sequence
 		}
 		else
 			return;	// bad input sequence
 	}
+}
+
+int main(void)
+{
+	char melody[] = { "T250CS2C2CS2C2cs2T125PPT250c2c3c3c3e3Ds2" };
+	playSound(melody);
+	system("PAUSE");
+
+	return 0;
 }
