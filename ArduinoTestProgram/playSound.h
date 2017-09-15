@@ -13,10 +13,10 @@
 	#define SOUND_DATA 3
 	#define f0 440 //Hz
 	#define a 1.059463094359 //2^(1/12)
-	#define UPPER(__x) (((__x) >= 'a' && (__x) <= 't') ? ((__x) + 32) : (__x))
+	#define UPPER(__x) (((__x) >= 'a' && (__x) <= 'z') ? ((__x) - 32) : (__x))
 
 	void soundInit(void);
-	void sound(uint16_t, uint8_t);
-	void noSound(uint8_t);
+	void sound(uint16_t);
+	void noSound();
 	void playSound(const char *);
 #endif
